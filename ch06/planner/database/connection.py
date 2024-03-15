@@ -4,7 +4,14 @@ from beanie import init_beanie, PydanticObjectId
 from models.events import Event
 from models.users import User
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseSettings, BaseModel
+from pydantic_settings import BaseSettings
+from pydantic import BaseModel
+"""if you’re writing a script that runs a few queries and doesn’t need to handle many simultaneous 
+connections, PyMongo might be simpler and easier to use. But if you’re writing a web server or any 
+application that needs to handle many simultaneous connections, AsyncIOMotorClient would be a 
+better choice because it allows your application to continue doing other things while waiting 
+for the database."""
+"""AsyncIOMotorClient is ONLY designed to connect MONGODB"""
 
 
 class Settings(BaseSettings):
@@ -30,7 +37,7 @@ class Database:
     async def get(self, id: PydanticObjectId) -> Any:
         doc = await self.model.get(id)
         if doc:
-            return doc
+            return
         return False
 
     async def get_all(self) -> List[Any]:
