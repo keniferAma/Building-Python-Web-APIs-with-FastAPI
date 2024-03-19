@@ -1,6 +1,7 @@
-from beanie import Document
+from beanie import Document # Benie is a library dedicated to mongodb
 
 from pydantic import BaseModel, EmailStr
+
 
 
 class User(Document):
@@ -11,7 +12,7 @@ class User(Document):
         name = "users"
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "email": "fastapi@packt.com",
                 "password": "strong!!!",
@@ -20,5 +21,5 @@ class User(Document):
 
 
 class UserSignIn(BaseModel):
-    email: EmailStr
+    email: EmailStr 
     password: str

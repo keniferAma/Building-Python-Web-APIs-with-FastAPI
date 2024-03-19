@@ -15,7 +15,7 @@ for the database."""
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: Optional[str] = None
+    DATABASE_URL: Optional[str] = 'mongodb+srv://admin:comic0413@cluster0.6dgsimp.mongodb.net/blog'
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
