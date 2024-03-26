@@ -3,8 +3,8 @@ from fastapi import APIRouter, HTTPException, status
 from models.users import User, UserSignIn
 
 user_router = APIRouter(
-    tags=["User"],
-)
+    tags=["Users"], # It seems we can add tags! well see this in the documentation.
+)   
 
 users = {}
 
