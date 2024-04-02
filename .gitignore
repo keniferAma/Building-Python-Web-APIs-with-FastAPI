@@ -1,3 +1,5 @@
 .idea
 venv
 .env
+__pycache__/
+ch06/planner/__pycache__
