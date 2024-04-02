@@ -5,10 +5,21 @@ from fastapi.responses import RedirectResponse
 from database.connection import Settings
 from routes.events import event_router
 from routes.users import user_router
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+
 
 settings = Settings()
+
+@asynccontextmanager # To startup 
+async def init_db(app: FastAPI): 
+    await settings.initialize_database() # code to run on startup 
+    yield # Code to run on shutdown (it is NECESSARY for the @contextmanager but could be empty)
+
+
+app = FastAPI(lifespan=init_db) # lifespan: duracion, vida util. se ejecuta al iniciar la aplicacion
+
+
 
 # Register routes
 
@@ -16,9 +27,6 @@ app.include_router(user_router, prefix="/user")
 app.include_router(event_router, prefix="/event")
 
 
-@app.on_event("startup")
-async def init_db():
-    await settings.initialize_database()
 
 
 @app.get("/")
