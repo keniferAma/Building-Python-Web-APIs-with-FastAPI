@@ -15,14 +15,14 @@ for the database."""
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: Optional[str] = 'mongodb+srv://admin:comic0413@cluster0.6dgsimp.mongodb.net/blog'
+    DATABASE_URL: Optional[str] = None
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
-        await init_beanie(database=client.get_default_database(),
-                          document_models=[Event, User])
+        await init_beanie(database=client.get_database('blog'), # Here we specify the dabase (If we haven't in the .venv file)
+                          document_models=[Event, User]) # These are the collection names.
 
-    class Config:
+    class Config: # Reserved class when nested/inherited from BaseSettings, same with 'env_file'
         env_file = ".env"
 
 
@@ -65,3 +65,6 @@ class Database:
             return False
         await doc.delete()
         return True
+
+settings = Settings() # proving the correct .env functionality.
+print(settings.DATABASE_URL)

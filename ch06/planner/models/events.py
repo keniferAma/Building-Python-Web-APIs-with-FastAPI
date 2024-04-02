@@ -26,7 +26,7 @@ class Event(Document):
         name = "events"
 
 
-class EventUpdate(BaseModel):
+class EventUpdate(BaseModel): # It seems this class is created with UPDATE purposes.
     title: Optional[str]
     image: Optional[str]
     description: Optional[str]

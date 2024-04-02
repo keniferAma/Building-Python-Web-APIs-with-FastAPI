@@ -1,12 +1,15 @@
-from beanie import Document # Benie is a library dedicated to mongodb
+from beanie import Document, Link # Benie is a library dedicated to mongodb
 
 from pydantic import BaseModel, EmailStr
+from typing import Optional, List
+from models.events import Event
 
 
 
 class User(Document):
     email: EmailStr
     password: str
+    events: Optional[List[Link[Event]]] = None
 
     class Settings:
         name = "users"
@@ -16,6 +19,7 @@ class User(Document):
             "example": {
                 "email": "fastapi@packt.com",
                 "password": "strong!!!",
+                "events": []
             }
         }
 
