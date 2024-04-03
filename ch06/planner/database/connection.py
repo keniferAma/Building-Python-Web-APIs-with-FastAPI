@@ -37,7 +37,7 @@ class Database:
     async def get(self, id: PydanticObjectId) -> Any:
         doc = await self.model.get(id)
         if doc:
-            return
+            return doc
         return False
 
     async def get_all(self) -> List[Any]:
