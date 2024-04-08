@@ -12,8 +12,8 @@ class Event(Document):
     tags: List[str]
     location: str
 
-    class Config:
-        schema_extra = {
+    class Config: #Config belongs to pydantic, while Settings class to Beanie
+        json_schema_extra = {
             "example": {
                 "title": "FastAPI BookLaunch",
                 "image": "https://linktomyimage.com/image.png",
@@ -23,8 +23,8 @@ class Event(Document):
             }
         }
 
-    class Collection:
-        name = "events"
+    class Settings: #Specifying the collection names through the Settings by Beanie
+        name = "events" 
 
 
 class EventUpdate(BaseModel):
@@ -35,7 +35,7 @@ class EventUpdate(BaseModel):
     location: Optional[str]
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "title": "FastAPI BookLaunch",
                 "image": "https://linktomyimage.com/image.png",
