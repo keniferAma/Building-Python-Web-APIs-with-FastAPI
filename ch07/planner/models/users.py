@@ -7,11 +7,11 @@ class User(Document):
     email: EmailStr
     password: str
 
-    class Collection:
+    class Settings:
         name = "users"
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "email": "fastapi@packt.com",
                 "password": "strong!!!"
