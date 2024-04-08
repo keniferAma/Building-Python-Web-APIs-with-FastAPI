@@ -42,10 +42,15 @@ async def sign_user_in(user: OAuth2PasswordRequestForm = Depends()) -> dict:
         access_token = create_access_token(user_exist.email)
         return {
             "access_token": access_token,
-            "token_type": "Bearer"
+            "token_type": "Bearer" #This Bearer means: 
+            #“I bear this token that proves I am who I say I am, and I should be granted access.”
         }
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid details passed."
     )
+
+"""Authorization: Bearer {your-jwt}
+That is the specific header that transmitts the jwt token once verified"""
+
