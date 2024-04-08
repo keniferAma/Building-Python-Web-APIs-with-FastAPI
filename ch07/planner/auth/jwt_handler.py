@@ -29,7 +29,7 @@ def verify_access_token(token: str):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="No access token supplied"
             )
-        if datetime.utcnow() > datetime.utcfromtimestamp(expire):
+        if datetime.now() > datetime.fromtimestamp(expire):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Token expired!"
