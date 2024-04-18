@@ -4,9 +4,9 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from database.connection import Settings
-from routes.events import event_router
-from routes.users import user_router
+from planner.database.connection import Settings
+from planner.routes.events import event_router
+from planner.routes.users import user_router
 
 settings = Settings()
 
