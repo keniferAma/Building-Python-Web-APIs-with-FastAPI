@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from beanie import Document
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Event(Document):
@@ -28,11 +28,11 @@ class Event(Document):
 
 
 class EventUpdate(BaseModel):
-    title: Optional[str]
-    image: Optional[str]
-    description: Optional[str]
-    tags: Optional[List[str]]
-    location: Optional[str]
+    title: Optional[str] = Field(None)
+    image: Optional[str] = Field(None)
+    description: Optional[str] = Field(None)
+    tags: Optional[List[str]] = Field(None)
+    location: Optional[str] = Field(None)
 
     class Config:
         json_schema_extra = {
