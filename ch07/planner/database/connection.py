@@ -1,9 +1,8 @@
 from typing import Optional
-import sys
-
+from pprint import pprint
 from beanie import init_beanie, PydanticObjectId
-from models.events import Event
-from models.users import User
+from planner.models.events import Event
+from planner.models.users import User
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic_settings import BaseSettings
 from pydantic import BaseModel
@@ -62,6 +61,3 @@ class Database:
         return True
 
 
-una = Settings()
-
-print(una.DATABASE_URL)
