@@ -1,10 +1,11 @@
+
 from typing import List
 
-from auth.authenticate import authenticate
+from planner.auth.authenticate import authenticate
 from beanie import PydanticObjectId
-from database.connection import Database
+from planner.database.connection import Database
 from fastapi import APIRouter, Depends, HTTPException, status
-from models.events import Event, EventUpdate
+from planner.models.events import Event, EventUpdate
 
 event_router = APIRouter(
     tags=["Events"]
