@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Event(Document):
-    creator: Optional[str]
+    creator: Optional[str] = Field(None)
     title: str
     image: str
     description: str
