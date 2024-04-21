@@ -1,11 +1,13 @@
 from typing import Optional
 from pprint import pprint
 from beanie import init_beanie, PydanticObjectId
-from planner.models.events import Event
-from planner.models.users import User
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic_settings import BaseSettings
 from pydantic import BaseModel
+
+from planner.models.users import User
+from planner.models.events import Event
+
 
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
@@ -60,4 +62,5 @@ class Database:
         await doc.delete()
         return True
 
-
+url = Settings()
+print(url.DATABASE_URL)
