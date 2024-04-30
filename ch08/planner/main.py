@@ -2,14 +2,22 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
-from database.connection import Settings
-from routes.events import event_router
-from routes.users import user_router
-
-app = FastAPI()
+from planner.database.connection import Settings
+from planner.routes.events import event_router
+from planner.routes.users import user_router
+"""All changes made on the packages were because we named 'ch08' as root, but should've been 'planner'"""
 
 settings = Settings()
+
+@asynccontextmanager # here was '.on_event()', currently deprecated.
+async def db_startup(app: FastAPI):
+    await settings.initialize_database()
+    yield
+
+app = FastAPI(lifespan=db_startup)
+
 
 
 # register origins
@@ -29,10 +37,6 @@ app.add_middleware(
 app.include_router(user_router, prefix="/user")
 app.include_router(event_router, prefix="/event")
 
-
-@app.on_event("startup")
-async def init_db():
-    await settings.initialize_database()
 
 
 @app.get("/")
