@@ -1,10 +1,11 @@
 from typing import Optional, Any, List
 
 from beanie import init_beanie, PydanticObjectId
-from models.events import Event
-from models.users import User
+from planner.models import Event, User # Look the models/__init__.py file.
+"""All changes made on the packages were because we named 'ch08' as root, but should've been 'planner'"""
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseSettings, BaseModel
+from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 
 
 class Settings(BaseSettings):
@@ -13,7 +14,7 @@ class Settings(BaseSettings):
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
-        await init_beanie(database=client.get_default_database(),
+        await init_beanie(database=client.get_default_database('blog'),
                           document_models=[Event, User])
 
     class Config:
@@ -59,3 +60,6 @@ class Database:
             return False
         await doc.delete()
         return True
+
+url_print = Settings()
+print(url_print.DATABASE_URL)
