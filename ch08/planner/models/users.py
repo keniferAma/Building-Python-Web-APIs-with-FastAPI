@@ -11,7 +11,7 @@ class User(Document):
         name = "users"
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "email": "fastapi@packt.com",
                 "password": "strong!!!"
