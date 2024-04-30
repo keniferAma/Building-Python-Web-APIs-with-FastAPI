@@ -1,10 +1,11 @@
 from typing import List
 
-from auth.authenticate import authenticate
+from planner.auth.authenticate import authenticate
 from beanie import PydanticObjectId
-from database.connection import Database
+from planner.database.connection import Database
 from fastapi import APIRouter, Depends, HTTPException, status
-from models.events import Event, EventUpdate
+from planner.models import Event, EventUpdate
+"""All changes made on the packages were because we named 'ch08' as root, but should've been 'planner'"""
 
 event_router = APIRouter(
     tags=["Events"]
