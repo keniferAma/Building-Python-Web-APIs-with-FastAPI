@@ -1,10 +1,11 @@
 import time
 from datetime import datetime
 
-from database.connection import Settings
+from planner.database.connection import Settings
 from fastapi import HTTPException, status
 from jose import jwt, JWTError
-from models.users import User
+from planner.models import User
+"""All changes made on the packages were because we named 'ch08' as root, but should've been 'planner'"""
 
 settings = Settings()
 
@@ -30,7 +31,7 @@ async def verify_access_token(token: str) -> dict:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="No access token supplied"
             )
-        if datetime.utcnow() > datetime.utcfromtimestamp(expire):
+        if datetime.now() > datetime.fromtimestamp(expire):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Token expired!"
