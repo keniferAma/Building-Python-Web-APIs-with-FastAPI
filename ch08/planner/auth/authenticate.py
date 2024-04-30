@@ -1,6 +1,7 @@
-from auth.jwt_handler import verify_access_token
+from planner.auth.jwt_handler import verify_access_token
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+"""All changes made on the packages were because we named 'ch08' as root, but should've been 'planner'"""
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/signin")
 
