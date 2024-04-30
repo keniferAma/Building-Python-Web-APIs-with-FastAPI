@@ -1,9 +1,9 @@
 import pytest
 
+from planner.models.events import EventUpdate
+
+
 # Fixture is defined.
-from models.events import EventUpdate
-
-
 @pytest.fixture
 def event() -> EventUpdate:
     return EventUpdate(
@@ -17,3 +17,7 @@ def event() -> EventUpdate:
 
 def test_event_name(event: EventUpdate) -> None:
     assert event.title == "FastAPI Book Launch"
+
+def test_event_location(event: EventUpdate) -> None:
+    assert event.location == 'Google Meet'
+
