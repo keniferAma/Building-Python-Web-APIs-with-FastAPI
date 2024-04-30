@@ -2,7 +2,8 @@ import httpx
 import pytest
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio # this mark.asyncio informs pytest to trear this as an async test. 
+                     #ONLY PERFORMED BY event loops
 async def test_sign_new_user(default_client: httpx.AsyncClient) -> None:
     payload = {
         "email": "testuser@packt.com",
@@ -31,12 +32,13 @@ async def test_sign_user_in(default_client: httpx.AsyncClient) -> None:
         "password": "testpassword"
     }
 
-    headers = {
+    headers = {         
         "accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
     response = await default_client.post("/user/signin", data=payload, headers=headers)
-
+    # The event loop scoped by session closed right here and there was not loop from here downwards
+    
     assert response.status_code == 200
     assert response.json()["token_type"] == "Bearer"
