@@ -46,6 +46,30 @@ async def test_user_already_exist(default_client: httpx.AsyncClient) -> None:
 
 
 @pytest.mark.asyncio(scope='session')
+async def test_wrong_username(default_client: httpx.AsyncClient) -> None:
+    payload = {
+        "username": "wronguser@packt.com",
+        "password": "testpassword"
+    }
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    test_reponse = {
+        "detail": "User with email does not exist."
+    }
+
+    response = await default_client.post('/user/signin', data=payload, headers=headers)
+    # Remember: 'json=' to send json format when we set the Content-Type=application/json
+    # 'data=' to send form-encoded information when we set the Content-Type=application/x-www-form-urlencoded
+
+    assert response.status_code == 404
+    assert response.json()['detail'] == test_reponse["detail"]
+
+
+@pytest.mark.asyncio(scope='session')
 async def test_sign_user_in(default_client: httpx.AsyncClient) -> None:
     payload = {
         "username": "testuser@packt.com",
