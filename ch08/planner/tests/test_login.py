@@ -70,6 +70,28 @@ async def test_wrong_username(default_client: httpx.AsyncClient) -> None:
 
 
 @pytest.mark.asyncio(scope='session')
+async def test_invalid_password(default_client: httpx.AsyncClient) -> None:
+    payload = {
+        "username": "testuser@packt.com",
+        "password": "wrongpassword"
+    }
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    test_response = {
+        "detail": "Invalid details passed."
+    }
+
+    response = await default_client.post('/user/signin', data=payload, headers=headers)
+
+    assert response.status_code == 401
+    assert response.json()['detail'] == test_response["detail"]
+
+
+@pytest.mark.asyncio(scope='session')
 async def test_sign_user_in(default_client: httpx.AsyncClient) -> None:
     payload = {
         "username": "testuser@packt.com",
