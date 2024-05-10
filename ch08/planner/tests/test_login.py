@@ -2,7 +2,7 @@ import httpx
 import pytest
 
 
-@pytest.mark.asyncio # this mark.asyncio informs pytest to trear this as an async test. 
+@pytest.mark.asyncio(scope='session') # this mark.asyncio informs pytest to trear this as an async test. 
                      #ONLY PERFORMED BY event loops
 async def test_sign_new_user(default_client: httpx.AsyncClient) -> None:
     payload = {
@@ -25,7 +25,27 @@ async def test_sign_new_user(default_client: httpx.AsyncClient) -> None:
     assert response.json() == test_response
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(scope='session')
+async def test_user_already_exist(default_client: httpx.AsyncClient) -> None:
+    payload = {
+        "email": "testuser@packt.com",
+        "password": "testpassword"
+    }
+    
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json"
+    }
+
+    test_response = {"detail": "User with email provided exists already."}
+
+    response = await default_client.post('/user/signup', json=payload, headers=headers)
+
+    assert response.json()['detail'] == test_response["detail"]
+    assert response.status_code == 409
+
+
+@pytest.mark.asyncio(scope='session')
 async def test_sign_user_in(default_client: httpx.AsyncClient) -> None:
     payload = {
         "username": "testuser@packt.com",
