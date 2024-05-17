@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
-    SECRET_KEY: Optional[str] = "default"
+    SECRET_KEY: Optional[str] = None
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
@@ -41,7 +41,7 @@ class Database:
 
     async def update(self, id: PydanticObjectId, body: BaseModel) -> Any:
         doc_id = id
-        des_body = body.dict()
+        des_body = body.model_dump()
 
         des_body = {k: v for k, v in des_body.items() if v is not None}
         update_query = {"$set": {
