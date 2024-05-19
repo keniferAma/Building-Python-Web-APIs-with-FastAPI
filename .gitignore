@@ -7,3 +7,5 @@ env/
 .pytest_cache
 virtual_environment/
 .coverage
+dist/
+build/
