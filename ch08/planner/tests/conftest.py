@@ -5,20 +5,19 @@ import pytest
 from planner.database.connection import Settings
 from planner.main import app
 from planner.models import User, Event
+from planner.auth.jwt_handler import create_access_token
 
 
-@pytest.fixture(scope="function") # In the context of pytest, a ‘session’ refers to a single run of pytest from start to finish.
+@pytest.fixture(scope='session') # In the context of pytest, a ‘session’ refers to a single run of pytest from start to finish.
 # Another perspective: like in asyncio.AsyncClient(), the session doesn't have to repeat every time is needded.
-# 
 def event_loop():
     loop = asyncio.get_event_loop()
     yield loop
     """the yield keyword in pytest fixtures is used to pause the fixture function and provide a value 
     to the test function, and then resume the fixture function after the test function finishes to perform 
     any necessary teardown operations."""
-
     loop.close()
-
+    
 
 async def init_db():
     test_settings = Settings()
@@ -32,10 +31,10 @@ and provide them to the test functions. After the test functions finish, the fix
 where they left off to perform any necessary cleanup operations."""
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 async def default_client():             
     await init_db()
-    async with httpx.AsyncClient(app=app, base_url="http://app") as client: # Creating a Client session. 
+    async with httpx.AsyncClient(app=app, base_url="http://localhost:8080/") as client: # Creating a Client session. 
         yield client
         """the yield keyword in pytest fixtures is used to pause the fixture function and provide a value 
         to the test function, and then resume the fixture function after the test function finishes to perform 
@@ -44,10 +43,31 @@ async def default_client():
         # Clean up resources 
         """HERE default_client() WAS BEING FINISHING ITS YIELD BECAUSE OF THE CALLING IN THE test_login.py 
         FUNCTIONS, AND THE LOOP WAS BEING TEARDOWN OR FINISHED. THAT'S WHY OF THE RunTimeError by session
-        SO, WE HAD TO SWITCH TO scope='function', WHICH LET'S US EXECUTE ALL THE TESTS..."""
+        SO, WE HAD TO SWITCH TO scope='function', WHICH LET'S US EXECUTE ALL THE TESTS ONE BY ONE..."""
+        
         await Event.find_all().delete()
         await User.find_all().delete()
 
+
+@pytest.fixture(scope='session')
+async def access_token() -> str:
+    return create_access_token("testuser@packt.com")
+
+
+@pytest.fixture(scope="session")
+async def mock_event() -> Event:
+    new_event = Event(
+        creator="testuser@packt.com",
+        title="FastAPI Book Launch",
+        image="https://linktomyimage.com/image.png",
+        description="We will be discussing the contents of the FastAPI book in this event.Ensure to come with your own copy to win gifts!",
+        tags=["python", "fastapi", "book", "launch"],
+        location="Google Meet"
+    )
+
+    await Event.insert_one(new_event)
+
+    yield new_event
 
 
 """The client session in your pytest fixture, when defined with scope='session', is created once and lasts 
