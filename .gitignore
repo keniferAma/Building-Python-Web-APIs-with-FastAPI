@@ -6,3 +6,4 @@ env/
 *.egg-info/
 .pytest_cache
 virtual_environment/
+.coverage
