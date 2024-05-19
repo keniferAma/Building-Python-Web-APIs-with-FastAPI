@@ -112,11 +112,48 @@ async def test_get_event_again(default_client: httpx.AsyncClient, mock_event: Ev
     assert response.status_code == 404
 
 
+@pytest.mark.asyncio(scope='session')
+async def test_home_redirect(default_client: httpx.AsyncClient) -> None:
+    response = await default_client.get('/') # The basic endpoint where should redirect.
+    
+    print(response.headers)
+    assert response.is_redirect == True
+    assert response.headers['location'] == '/event/'
+    
+"""FAILED planner/tests/test_routes.py::test_home_redirect - AssertionError: assert URL('http://localhost:8080/') == 'http://localhost/event/'
+ +  where URL('http://localhost:8080/') = <Response [307 Temporary Redirect]>.url"""
+# It is difficult to execute because the asyncio client remain its base_url for the entire session. The 
+# temporary redirect indeed was executed, but the redirected url comes back to the base_url.
 
-"""
+
+
+@pytest.mark.asyncio(scope='session')
+async def test_cors(default_client: httpx.AsyncClient, mock_event: Event) -> None:
+    headers = { # IF WE DON'T INCLUDE THE 'origin' HEADER, THE RESPONSE CORS HEADERS ARE NOT AVAILABLE.
+        "origin": "http://localhost:8080"
+    }
+    
+    url = f'/event/{mock_event.id}'
+
+    response = await default_client.get(url=url, headers=headers) 
+    
+    # headers with 'origin' included in the RESPONSE
+    """Headers({'content-length': '50', 'content-type': 'application/json', 
+    'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://localhost:8080', 
+    'vary': 'Origin'})"""
+
+    # headers without 'origin' header included in the RESPONSE
+    """Headers({'content-length': '50', 'content-type': 'application/json'})"""
+
+    assert response.headers['access-control-allow-origin'] == 'http://localhost:8080'
+
+
+""" COVERAGE
 -pip install coverage 
 -coverage run -m pytest = to run everything
 -coverage report = to see the results, SO WE MUST EXECUTE 'coverage run -m pytest'
+
+PYTEST-ORDERING
 -pip install pytest-ordering = installation of ordering, pytests library to set the order which modules are 
 executed. (@pytest.mark.run(order=<number of order, starting from 1>))
 """
