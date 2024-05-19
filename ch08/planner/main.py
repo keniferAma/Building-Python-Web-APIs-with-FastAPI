@@ -14,7 +14,7 @@ settings = Settings()
 @asynccontextmanager # here was '.on_event()', currently deprecated.
 async def db_startup(app: FastAPI):
     await settings.initialize_database()
-    yield
+    yield # necessary if we're not yielding anything...
 
 app = FastAPI(lifespan=db_startup)
 
@@ -22,13 +22,13 @@ app = FastAPI(lifespan=db_startup)
 
 # register origins
 
-origins = ["*"]
+origins = ["http://localhost:8080"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*"], # forcing only posts, but maybe in a testing environment the application is not forcing...
     allow_headers=["*"],
 )
 
